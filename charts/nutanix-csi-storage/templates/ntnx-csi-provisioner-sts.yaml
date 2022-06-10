@@ -108,7 +108,7 @@ spec:
             mountPath: /csi
         - name: ntnx-csi-plugin
           image: {{ .Values.provisioner.image }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: true
             privileged: true
@@ -163,6 +163,24 @@ spec:
           args:
             - --csi-address=/csi/csi.sock
             - --http-endpoint=:9807
+        - args:
+          - "--v=5"
+          - "--csi-address=$(ADDRESS)"
+          - "--leader-election=false"
+          - "--http-endpoint=:9813"
+          env:
+            - name: ADDRESS
+              value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+          image: {{ .Values.sidecars.healthmonitor.image }}
+          imagePullPolicy: Always
+          name: csi-external-health-monitor-controller
+          volumeMounts:
+            - mountPath: /var/lib/csi/sockets/pluginproxy/
+              name: socket-dir
+          ports:
+          - containerPort: 9813
+            name: http-endpoint
+            protocol: TCP
     {{- with (.Values.provisioner.nodeSelector | default .Values.nodeSelector) }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -171,6 +189,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      imagePullSecrets:
+      - name: pknutanix-pull-secret
       volumes:
         - emptyDir: {}
           name: socket-dir
