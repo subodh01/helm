@@ -52,7 +52,7 @@ spec:
             privileged: true
             allowPrivilegeEscalation: true
           image: {{ .Values.node.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           args :
             - "--endpoint=$(CSI_ENDPOINT)"
             - "--nodeid=$(NODE_ID)"
@@ -126,8 +126,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      imagePullSecrets:
-      - name: pknutanix-pull-secret
       volumes:
         - name: registration-dir
           hostPath:
