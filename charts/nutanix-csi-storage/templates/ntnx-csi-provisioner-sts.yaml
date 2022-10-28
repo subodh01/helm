@@ -175,7 +175,7 @@ spec:
             - name: ADDRESS
               value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
           image: {{ .Values.sidecars.healthmonitor.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           name: csi-external-health-monitor-controller
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
