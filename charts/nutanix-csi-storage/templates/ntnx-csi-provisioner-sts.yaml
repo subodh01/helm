@@ -117,6 +117,8 @@ spec:
             - --nodeid=$(NODE_ID)
             - --drivername={{ include "nutanix-csi-storage.drivername" . }}
             - --use-pc=true
+            - --capacity-bytes-threshold=60.0
+            - --enable-volume-health-monitoring=true
           env:
             - name: CSI_ENDPOINT
               value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
@@ -173,7 +175,7 @@ spec:
             - name: ADDRESS
               value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
           image: {{ .Values.sidecars.healthmonitor.image }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: Always
           name: csi-external-health-monitor-controller
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
