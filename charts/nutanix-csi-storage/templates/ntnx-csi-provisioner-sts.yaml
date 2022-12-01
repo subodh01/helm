@@ -117,7 +117,7 @@ spec:
             - --nodeid=$(NODE_ID)
             - --drivername={{ include "nutanix-csi-storage.drivername" . }}
             - --use-pc=true
-            - --capacity-bytes-threshold=50.0
+            # - --capacity-bytes-threshold=50.0
             - --enable-volume-health-monitoring=true
           env:
             - name: CSI_ENDPOINT
