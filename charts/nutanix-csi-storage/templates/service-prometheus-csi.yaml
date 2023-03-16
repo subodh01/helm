@@ -19,7 +19,6 @@ spec:
       port: 9809
       targetPort: 9809
       protocol: TCP
-    #This should be attacher instead of resizer
     - name: attacher
       port: 9810
       targetPort: 9810
