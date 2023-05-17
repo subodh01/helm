@@ -20,6 +20,23 @@ spec:
     spec:
       serviceAccount: csi-provisioner
       hostNetwork: true
+      initContainers:
+        - name: ntnx-csi-init
+          image: {{ .Values.ntnxCsiInitContainer.image }}
+          env:
+            - name: CSI_SECRET_DIR
+              value: {{ .Values.csiSecretDir }}
+            - name: NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - mountPath: {{ .Values.csiSecretDir }}
+              name: pc-secret
+              readOnly: true
+            - mountPath: /initcontainerdir/var/run/
+              name: init-container-dir
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
       containers:
         - name: csi-provisioner
           image: {{ .Values.sidecars.provisioner.image }}
@@ -145,6 +162,8 @@ spec:
             # This is needed for static NFS volume feature.
             - mountPath: /host
               name: root-dir
+            - mountPath: /initcontainerdir/var/run/
+              name: init-container-dir
             - mountPath: {{ .Values.csiSecretDir }}
               name: pc-secret
               readOnly: true
@@ -199,6 +218,8 @@ spec:
       volumes:
         - emptyDir: {}
           name: socket-dir
+        - emptyDir: {}
+          name: init-container-dir
         - hostPath:
             path: /
             type: Directory

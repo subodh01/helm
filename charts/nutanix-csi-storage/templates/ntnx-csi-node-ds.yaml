@@ -18,6 +18,23 @@ spec:
     spec:
       serviceAccount: csi-node-ntnx-plugin
       hostNetwork: true
+      initContainers:
+        - name: ntnx-csi-init
+          image: {{ .Values.ntnxCsiInitContainer.image }}
+          env:
+            - name: CSI_SECRET_DIR
+              value: {{ .Values.csiSecretDir }}
+            - name: NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - mountPath: {{ .Values.csiSecretDir }}
+              name: pc-secret
+              readOnly: true
+            - mountPath: /initcontainerdir/var/run/
+              name: init-container-dir
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
       containers:
         - name: driver-registrar
           image: {{ .Values.sidecars.registrar.image }}
@@ -89,6 +106,8 @@ spec:
               readOnly: true
             - name: plugin-dir
               mountPath: /csi
+            - name: init-container-dir
+              mountPath: /initcontainerdir/var/run/
             - name: pods-mount-dir
               mountPath: {{ .Values.kubeletDir }}
               # needed so that any mounts setup inside this container are
@@ -158,3 +177,5 @@ spec:
         - name: pc-secret
           secret:
             secretName: {{ .Values.pcSecretName }}
+        - emptyDir: {}
+          name: init-container-dir

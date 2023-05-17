@@ -115,6 +115,9 @@ servicemonitor:
 # Pod pecific Settings
 #
 
+ntnxCsiInitContainer:
+  image: quay.io/aniruddh_gupta/k8-csi-learning:init
+
 provisioner:
   image: quay.io/karbon/ntnx-csi:pc_ea_rc3
   nodeSelector: {}
