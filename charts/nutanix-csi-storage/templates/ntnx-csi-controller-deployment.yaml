@@ -51,7 +51,7 @@ spec:
             # This is used to collect CSI operation metrics
             - --http-endpoint=:9809
             - --feature-gates=Topology=true
-            - --v=5
+            - --v=2
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
@@ -121,6 +121,10 @@ spec:
           env:
           - name: ADDRESS
             value: /csi/csi.sock
+          resources:
+            requests:
+              cpu: 5m
+              memory: 30Mi
           volumeMounts:
           - name: socket-dir
             mountPath: /csi
