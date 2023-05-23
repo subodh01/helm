@@ -183,11 +183,18 @@ spec:
             periodSeconds: 2
             failureThreshold: 3
         - name: liveness-probe
+          resources:
+            requests:
+              cpu: 5m
+              memory: 20Mi
           volumeMounts:
             - mountPath: /csi
               name: socket-dir
           image: {{ .Values.sidecars.livenessprobe.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
+          args:
+            - --csi-address=/csi/csi.sock
+            - --http-endpoint=:9807
         - args:
           - "--v=5"
           - "--csi-address=$(ADDRESS)"
@@ -203,10 +210,6 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
               name: socket-dir
-          ports:
-          - containerPort: 9813
-            name: http-endpoint
-            protocol: TCP
       priorityClassName: system-cluster-critical
     {{- with (.Values.controller.nodeSelector | default .Values.nodeSelector) }}
       nodeSelector:
