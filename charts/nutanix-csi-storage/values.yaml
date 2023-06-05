@@ -19,7 +19,8 @@ openshift:
   workerIscsiConfig: false
 
 # kubeletDir allows overriding the host location of kubelet's internal state.
-kubeletDir: "/var/nutanix/var/lib/kubelet"
+# for NKE cluster set it to "/var/nutanix/var/lib/kubelet"
+kubeletDir: "/var/lib/kubelet"
 
 # Global Settings for all pods
 
@@ -131,7 +132,8 @@ controller:
 
 node:
   image: quay.io/karbon/ntnx-csi:pc_ea_rc3
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/os: linux
   tolerations: []
 
 sidecars:
