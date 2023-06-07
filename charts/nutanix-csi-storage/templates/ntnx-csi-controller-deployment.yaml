@@ -150,6 +150,8 @@ spec:
                   fieldPath: spec.nodeName
             - name: CSI_SECRET_DIR
               value: {{ .Values.csiSecretDir }}
+            - name: FILES_CSI_SECRET_DIR
+              value: {{ .Values.filesCsiSecretDir }}
             - name: CSI_CATEGORY_CONFIGMAP_NAME
               value: {{ .Values.csiCategoryConfigmapName }}
             - name: CSI_CATEGORY_CONFIGMAP_NAMESPACE
@@ -167,6 +169,9 @@ spec:
             # This is needed for static NFS volume feature.
             - mountPath: /host
               name: root-dir
+            - mountPath: {{ .Values.filesCsiSecretDir }}
+              name: files-secret
+              readOnly: true
             - mountPath: {{ .Values.csiSecretDir }}
               name: pc-secret
               readOnly: true
@@ -226,6 +231,9 @@ spec:
             path: /
             type: Directory
           name: root-dir
+        - name: files-secret
+          secret:
+            secretName: {{ .Values.filesSecretName }}
         - name: pc-secret
           secret:
             secretName: {{ .Values.pcSecretName }}

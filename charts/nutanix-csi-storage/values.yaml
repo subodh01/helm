@@ -94,6 +94,16 @@ networkSegmentation: false
 # Files Settings
 #
 
+# Nutanix File server secret.
+# The user needs to create this secret in file-server
+# if set to false a new secret will not be created
+# Files endpoint can be provided as IP or FQDN of file-server
+createFilesSecret: false
+filesEndpoint: 00.00.000.000
+filesUsername: username
+filesPassword: password
+filesSecretName: files-secret
+
 ## NFS server fully qualified domain name (FQDN) or IP address
 # fileHost:
 
