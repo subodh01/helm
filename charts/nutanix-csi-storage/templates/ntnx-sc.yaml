@@ -36,7 +36,7 @@ metadata:
 driver: {{ include "nutanix-csi-storage.drivername" . }}
 parameters:
   storageType: NutanixVolumes
-deletionPolicy: Delete
+deletionPolicy: Retain
 {{- end }}
 
 {{- if eq .Values.fileClass true }}
