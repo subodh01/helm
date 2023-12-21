@@ -160,6 +160,10 @@ spec:
               value: {{ .Values.csiCategoryConfigmapName }}
             - name: CSI_CATEGORY_CONFIGMAP_NAMESPACE
               value: {{ .Values.csiCategoryConfigmapNamespace }}
+            - name: CSI_INIT_CONFIGMAP_NAME
+              value: {{  .Values.ntnxInitConfigMap.name }}
+            - name: CSI_INIT_CONFIGMAP_NAMESPACE
+              value: {{  .Values.ntnxInitConfigMap.namespace }}
           resources:
             limits:
               cpu: {{ .Values.controller.cpu }}
